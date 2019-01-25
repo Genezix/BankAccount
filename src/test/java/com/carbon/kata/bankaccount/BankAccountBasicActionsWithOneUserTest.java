@@ -19,7 +19,7 @@ class BankAccountBasicActionsWithOneUserTest {
 	@BeforeEach
 	void onSetUp() {
 		bank = new CarbonBank();
-		
+
 		try {
 			bank.addClient(clientName);
 		} catch (ClientAccountAlreadyExists e) {

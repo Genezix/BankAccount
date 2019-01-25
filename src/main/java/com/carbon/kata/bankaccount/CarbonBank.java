@@ -14,12 +14,12 @@ public class CarbonBank implements Bank {
 		if (clientAccounts.containsKey(clientName)) {
 			throw new ClientAccountAlreadyExists(clientName);
 		}
+
 		clientAccounts.put(clientName, BigInteger.valueOf(0));
 		return this;
 	}
 
-	public Bank depositOnClientAccount(String clientName, BigInteger amountToDeposit)
-			throws ClientAccountDoesNotExists {
+	public Bank depositOnClientAccount(String clientName, BigInteger amountToDeposit) throws ClientAccountDoesNotExists {
 		if (!clientAccounts.containsKey(clientName)) {
 			throw new ClientAccountDoesNotExists(clientName);
 		}
@@ -28,11 +28,11 @@ public class CarbonBank implements Bank {
 		return this;
 	}
 
-	public Bank withdrawalOnClientAccount(String clientName, BigInteger amountToWithdrawal)
-			throws ClientAccountDoesNotExists {
+	public Bank withdrawalOnClientAccount(String clientName, BigInteger amountToWithdrawal) throws ClientAccountDoesNotExists {
 		if (!clientAccounts.containsKey(clientName)) {
 			throw new ClientAccountDoesNotExists(clientName);
 		}
+
 		if (getClientAccountBalance(clientName).subtract(amountToWithdrawal).compareTo(BigInteger.valueOf(0)) >= 0) {
 			clientAccounts.put(clientName, clientAccounts.get(clientName).subtract(amountToWithdrawal));
 		}
