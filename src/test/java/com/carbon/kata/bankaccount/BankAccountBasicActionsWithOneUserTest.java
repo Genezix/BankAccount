@@ -8,8 +8,8 @@ import java.math.BigInteger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import exception.ClientAccountAlreadyExists;
-import exception.ClientAccountDoesNotExists;
+import com.carbon.kata.bankaccount.exception.ClientAccountAlreadyExists;
+import com.carbon.kata.bankaccount.exception.ClientAccountDoesNotExists;
 
 class BankAccountBasicActionsWithOneUserTest {
 
