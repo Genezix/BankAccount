@@ -4,8 +4,8 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 
-import exception.ClientAccountAlreadyExists;
-import exception.ClientAccountDoesNotExists;
+import com.carbon.kata.bankaccount.exception.ClientAccountAlreadyExists;
+import com.carbon.kata.bankaccount.exception.ClientAccountDoesNotExists;
 
 public class CarbonBank implements Bank {
 	private Map<String, BigInteger> clientAccounts = new HashMap<>();
