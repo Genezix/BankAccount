@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigInteger;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.ZoneId;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,13 +21,13 @@ class BankAccountExceptionTest {
 
 	@BeforeEach
 	void onSetUp() {
-		bank = new CarbonBank();
+		bank = new CarbonBank(Clock.fixed(Instant.now(), ZoneId.systemDefault()));
 	}
 
 	@Test
 	void testToDepositOnNoExistingClientAccount() {
 		Throwable exception = assertThrows(ClientAccountDoesNotExists.class, () -> {
-			bank.depositOnClientAccount(clientName, BigInteger.valueOf(10));
+			bank.operationOnClientAccount(clientName, BigInteger.valueOf(10));
 		});
 		assertEquals(clientName, exception.getMessage());
 	}
@@ -32,7 +35,7 @@ class BankAccountExceptionTest {
 	@Test
 	void testToWithdrawalOnNoExistingClientAccount() {
 		Throwable exception = assertThrows(ClientAccountDoesNotExists.class, () -> {
-			bank.withdrawalOnClientAccount(clientName, BigInteger.valueOf(10));
+			bank.operationOnClientAccount(clientName, BigInteger.valueOf(-10));
 		});
 		assertEquals(clientName, exception.getMessage());
 	}
