@@ -18,7 +18,7 @@ public class CarbonBank implements Bank {
 	public CarbonBank(Clock clock) {
 		this.clock = clock;
 	}
-	
+
 	@Override
 	public Bank addClient(String clientName) throws ClientAccountAlreadyExists {
 		if (clientAccounts.containsKey(clientName)) {
@@ -54,9 +54,12 @@ public class CarbonBank implements Bank {
 	@Override
 	public List<String> getOperationsHistoricOnClientAccount(String clientName) {
 		List<String> operationsStrings = new LinkedList<>();
-		
+
 		LinkedList<AccountOperation> operations = clientAccounts.get(clientName);
-		operations.forEach(o -> operationsStrings.add(o.toString()));
+		if (operations != null) {
+			operations.forEach(o -> operationsStrings.add(o.toString()));
+		}
+
 		return operationsStrings;
 	}
 }
