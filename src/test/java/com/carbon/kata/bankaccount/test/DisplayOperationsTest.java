@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import com.carbon.kata.bankaccount.bank.ProxyCarbonBank;
-import com.carbon.kata.bankaccount.display.OperationsDisplay;
+import com.carbon.kata.bankaccount.display.ConsoleDisplay;
 
 class DisplayOperationsTest {
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -27,12 +27,12 @@ class DisplayOperationsTest {
 		Clock clock = Clock.fixed(Instant.ofEpochMilli(1548718177581l), ZoneId.systemDefault());
 
 		String clientName = "Bat man";
-		ProxyCarbonBank bank = new ProxyCarbonBank(clock, new OperationsDisplay());
+		ProxyCarbonBank bank = new ProxyCarbonBank(clock, new ConsoleDisplay());
 
 		bank.addClient(clientName);
 
 		StringBuilder builder = new StringBuilder();
-		String sp = OperationsDisplay.SEPARATOR;
+		String sp = ConsoleDisplay.SEPARATOR;
 		builder.append(
 				sp + "Operation " + sp + "Date            " + sp + "Amount" + sp + "Balance" + sp + System.lineSeparator());
 		builder.append(
@@ -65,7 +65,7 @@ class DisplayOperationsTest {
 		System.setErr(new PrintStream(errContent));
 
 		String clientName = "Bat man";
-		ProxyCarbonBank bank = new ProxyCarbonBank(new OperationsDisplay());
+		ProxyCarbonBank bank = new ProxyCarbonBank(new ConsoleDisplay());
 		BigDecimal balance = BigDecimal.valueOf(10);
 
 		bank.addClient(clientName);
