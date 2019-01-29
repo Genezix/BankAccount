@@ -1,23 +1,17 @@
 package com.carbon.kata.bankaccount.test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.carbon.kata.bankaccount.AccountOperation;
-import com.carbon.kata.bankaccount.Bank;
-import com.carbon.kata.bankaccount.ProxyCarbonBank;
-import com.carbon.kata.bankaccount.display.DisplayableData;
+import com.carbon.kata.bankaccount.bank.Bank;
+import com.carbon.kata.bankaccount.bank.ProxyCarbonBank;
 
 class BankAccountBasicActionsWithOneUserTest {
 
@@ -34,68 +28,46 @@ class BankAccountBasicActionsWithOneUserTest {
 
 	@Test
 	void testToCreateAClientWithEmptyAccount() {
-		final BigInteger expectedAccountBalance = bInt(0);
-		assertEquals(expectedAccountBalance, bank.getClientAccountBalance(clientName));
+		final BigDecimal expectedAccountBalance = bDecimal(0);
+		assertTrue(expectedAccountBalance.compareTo(bank.getClientAccountBalance(clientName)) == 0);
 	}
 
 	@Test
 	void testToDepositOnClientAccount() {
-		final BigInteger amountToDeposit = bInt(10);
-		final BigInteger expectedAccountBalance = bInt(10);
+		final BigDecimal amountToDeposit = bDecimal(10.00000014);
+		final BigDecimal expectedAccountBalance = bDecimal(10.00000014);
 
 		bank.depositOrWithdrawalOnClientAccount(clientName, amountToDeposit);
 
-		assertEquals(expectedAccountBalance, bank.getClientAccountBalance(clientName));
+		assertTrue(expectedAccountBalance.compareTo(bank.getClientAccountBalance(clientName)) == 0);
 	}
 
 	@Test
 	void testToWithdrawalFromClientAccount() {
-		final BigInteger amountToDeposit = bInt(10);
-		final BigInteger amountToWithdrawal = bInt(-6);
-		final BigInteger expectedAccountBalance = amountToDeposit.add(amountToWithdrawal);
+		final BigDecimal amountToDeposit = bDecimal(10);
+		final BigDecimal amountToWithdrawal = bDecimal(-6);
+		final BigDecimal expectedAccountBalance = amountToDeposit.add(amountToWithdrawal);
 
 		bank.depositOrWithdrawalOnClientAccount(clientName, amountToDeposit);
 		bank.depositOrWithdrawalOnClientAccount(clientName, amountToWithdrawal);
 
-		assertEquals(expectedAccountBalance, bank.getClientAccountBalance(clientName));
+		assertTrue(expectedAccountBalance.compareTo(bank.getClientAccountBalance(clientName)) == 0);
 	}
 
 	@Test
 	void testToWithdrawlMoreThanPositionFromClientAccount() {
-		final BigInteger amountToDeposit = bInt(10);
-		final BigInteger amountToWithdrawal = bInt(-15);
+		final BigDecimal amountToDeposit = bDecimal(10);
+		final BigDecimal amountToWithdrawal = bDecimal(-15);
 
-		final BigInteger expectedAccountBalance = bInt(10);
+		final BigDecimal expectedAccountBalance = bDecimal(10);
 
 		bank.depositOrWithdrawalOnClientAccount(clientName, amountToDeposit);
 		bank.depositOrWithdrawalOnClientAccount(clientName, amountToWithdrawal);
 
-		assertEquals(expectedAccountBalance, bank.getClientAccountBalance(clientName));
+		assertTrue(expectedAccountBalance.compareTo(bank.getClientAccountBalance(clientName)) == 0);
 	}
 
-	@Test
-	void testToGetOperationHistoryOfClientAccount() {
-		final List<DisplayableData> expectedOperations = new LinkedList<>();
-
-		Random random = new Random();
-		expectedOperations.add(new AccountOperation(clock.millis(), bInt(0), bInt(0)));
-		long currentValue = 10000l;
-		expectedOperations.add(new AccountOperation(clock.millis(), bInt(currentValue), bInt(currentValue)));
-
-		bank.depositOrWithdrawalOnClientAccount(clientName, bInt(currentValue));
-
-		for (int i = 0; i < 100; i++) {
-			long moneyValue = random.nextLong() % 20;
-			currentValue += moneyValue;
-			expectedOperations.add(new AccountOperation(clock.millis(), bInt(moneyValue), bInt(currentValue)));
-			bank.depositOrWithdrawalOnClientAccount(clientName, bInt(moneyValue));
-		}
-		List<DisplayableData> resultOperations = bank.getOperationsHistoricOnClientAccount(clientName);
-		
-		Assertions.assertIterableEquals(expectedOperations, resultOperations);
-	}
-
-	private BigInteger bInt(long value) {
-		return BigInteger.valueOf(value);
+	private BigDecimal bDecimal(double value) {
+		return BigDecimal.valueOf(value);
 	}
 }

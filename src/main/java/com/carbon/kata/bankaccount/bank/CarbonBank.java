@@ -1,6 +1,6 @@
-package com.carbon.kata.bankaccount;
+package com.carbon.kata.bankaccount.bank;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.time.Clock;
 import java.util.Collections;
 import java.util.HashMap;
@@ -14,7 +14,7 @@ public class CarbonBank implements Bank {
 
 	private Map<String, LinkedList<AccountOperation>> clientAccounts = new HashMap<>();
 	private final Clock clock;
-
+	
 	CarbonBank(Clock clock) {
 		this.clock = clock;
 	}
@@ -22,7 +22,7 @@ public class CarbonBank implements Bank {
 	@Override
 	public Bank addClient(String clientName) {
 		LinkedList<AccountOperation> operations = new LinkedList<>();
-		operations.add(new AccountOperation(clock.millis(), BigInteger.valueOf(0), BigInteger.valueOf(0)));
+		operations.add(new AccountOperation(clock.millis(), BigDecimal.ZERO, BigDecimal.ZERO));
 		clientAccounts.put(clientName, operations);
 		return this;
 	}
@@ -36,19 +36,19 @@ public class CarbonBank implements Bank {
 	 * 
 	 * @see
 	 * com.carbon.kata.bankaccount.Bank#depositOrWithdrawalOnClientAccount(java.lang
-	 * .String, java.math.BigInteger)
+	 * .String, java.math.BigDecimal)
 	 */
 	@Override
-	public BigInteger depositOrWithdrawalOnClientAccount(String clientName, BigInteger amount) {
-		BigInteger previousBalance = getClientAccountBalance(clientName);
+	public BigDecimal depositOrWithdrawalOnClientAccount(String clientName, BigDecimal amount) {
+		BigDecimal previousBalance = getClientAccountBalance(clientName);
 
-		if (previousBalance.compareTo(BigInteger.valueOf(-1)) == 0) {
+		if (previousBalance.compareTo(BigDecimal.valueOf(-1)) == 0) {
 			return previousBalance;
 		}
 
-		BigInteger newBalance = previousBalance.add(amount);
+		BigDecimal newBalance = previousBalance.add(amount);
 
-		if (newBalance.compareTo(BigInteger.valueOf(0)) >= 0) {
+		if (newBalance.compareTo(BigDecimal.ZERO) >= 0) {
 			clientAccounts.get(clientName).add(new AccountOperation(clock.millis(), amount, newBalance));
 		}
 
@@ -56,9 +56,9 @@ public class CarbonBank implements Bank {
 	}
 
 	@Override
-	public BigInteger getClientAccountBalance(String clientName) {
+	public BigDecimal getClientAccountBalance(String clientName) {
 		if (!clientAccounts.containsKey(clientName)) {
-			return BigInteger.valueOf(-1);
+			return BigDecimal.valueOf(-1);
 		}
 
 		return clientAccounts.get(clientName).getLast().getBalance();

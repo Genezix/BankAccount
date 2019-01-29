@@ -1,5 +1,6 @@
 package com.carbon.kata.bankaccount.display;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class OperationsDisplay {
@@ -21,5 +22,9 @@ public class OperationsDisplay {
 			}
 		}
 
+	}
+
+	public void displayAccountBalance(BigDecimal balance) {
+		System.out.println("balance = " + balance);
 	}
 }
