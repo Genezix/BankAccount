@@ -10,9 +10,7 @@ import java.util.List;
 
 import com.carbon.kata.bankaccount.display.DisplayableData;
 
-public class AccountOperation implements DisplayableData {
-	private static final String DEPOSIT = "Deposit";
-	private static final String WITHDRAWAL = "Withdrawal";
+public class Operation implements DisplayableData {
 	private static final String DATE_FORMAT = "dd-MM-yyyy HH:mm";
 	
 	private static final List<String> headers;
@@ -27,14 +25,23 @@ public class AccountOperation implements DisplayableData {
 	private List<String> datas;
 
 	private final long time;
+	private final OperationType type;
 	private final BigDecimal operationAmount;
 	private final BigDecimal balance;
 
-	public AccountOperation(long time, BigDecimal operationAmount, BigDecimal balance) {
+	public static Operation buildDepositOperation(long time, BigDecimal operationAmount, BigDecimal balance) {
+		return new Operation(time, operationAmount, balance, OperationType.DEPOSIT);
+	}
+	
+	public static Operation buildWithDrawalOperation(long time, BigDecimal operationAmount, BigDecimal balance) {
+		return new Operation(time, operationAmount, balance, OperationType.WISTHDRAWAL);
+	}
+	
+	private Operation(long time, BigDecimal operationAmount, BigDecimal balance, OperationType type) {
 		this.time = time;
 		this.operationAmount = operationAmount;
 		this.balance = balance;
-
+		this.type = type;
 	}
 
 	public BigDecimal getBalance() {
@@ -50,7 +57,7 @@ public class AccountOperation implements DisplayableData {
 	public List<String> getDatas() {
 		if (datas == null) {
 			datas = new ArrayList<>();
-			datas.add(operationAmount.compareTo(BigDecimal.ZERO) == -1 ? WITHDRAWAL : DEPOSIT);
+			datas.add(this.type.getValue());
 			LocalDateTime date = Instant.ofEpochMilli(this.time).atZone(ZoneId.systemDefault()).toLocalDateTime();
 			DateTimeFormatter ofPattern = DateTimeFormatter.ofPattern(DATE_FORMAT);
 			datas.add(date.format(ofPattern));

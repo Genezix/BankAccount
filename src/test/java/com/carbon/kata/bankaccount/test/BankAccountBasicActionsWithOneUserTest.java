@@ -29,7 +29,7 @@ class BankAccountBasicActionsWithOneUserTest {
 	@Test
 	void testToCreateAClientWithEmptyAccount() {
 		final BigDecimal expectedAccountBalance = bDecimal(0);
-		assertTrue(expectedAccountBalance.compareTo(bank.getClientAccountBalance(clientName)) == 0);
+		assertTrue(expectedAccountBalance.compareTo(bank.getBalance(clientName)) == 0);
 	}
 
 	@Test
@@ -37,34 +37,34 @@ class BankAccountBasicActionsWithOneUserTest {
 		final BigDecimal amountToDeposit = bDecimal(10.00000014);
 		final BigDecimal expectedAccountBalance = bDecimal(10.00000014);
 
-		bank.depositOrWithdrawalOnClientAccount(clientName, amountToDeposit);
+		bank.deposit(clientName, amountToDeposit);
 
-		assertTrue(expectedAccountBalance.compareTo(bank.getClientAccountBalance(clientName)) == 0);
+		assertTrue(expectedAccountBalance.compareTo(bank.getBalance(clientName)) == 0);
 	}
 
 	@Test
 	void testToWithdrawalFromClientAccount() {
 		final BigDecimal amountToDeposit = bDecimal(10);
-		final BigDecimal amountToWithdrawal = bDecimal(-6);
-		final BigDecimal expectedAccountBalance = amountToDeposit.add(amountToWithdrawal);
+		final BigDecimal amountToWithdrawal = bDecimal(6);
+		final BigDecimal expectedAccountBalance = amountToDeposit.subtract(amountToWithdrawal);
 
-		bank.depositOrWithdrawalOnClientAccount(clientName, amountToDeposit);
-		bank.depositOrWithdrawalOnClientAccount(clientName, amountToWithdrawal);
+		bank.deposit(clientName, amountToDeposit);
+		bank.withdrawal(clientName, amountToWithdrawal);
 
-		assertTrue(expectedAccountBalance.compareTo(bank.getClientAccountBalance(clientName)) == 0);
+		assertTrue(expectedAccountBalance.compareTo(bank.getBalance(clientName)) == 0);
 	}
 
 	@Test
 	void testToWithdrawlMoreThanPositionFromClientAccount() {
 		final BigDecimal amountToDeposit = bDecimal(10);
-		final BigDecimal amountToWithdrawal = bDecimal(-15);
+		final BigDecimal amountToWithdrawal = bDecimal(15);
 
 		final BigDecimal expectedAccountBalance = bDecimal(10);
 
-		bank.depositOrWithdrawalOnClientAccount(clientName, amountToDeposit);
-		bank.depositOrWithdrawalOnClientAccount(clientName, amountToWithdrawal);
+		bank.deposit(clientName, amountToDeposit);
+		bank.withdrawal(clientName, amountToWithdrawal);
 
-		assertTrue(expectedAccountBalance.compareTo(bank.getClientAccountBalance(clientName)) == 0);
+		assertTrue(expectedAccountBalance.compareTo(bank.getBalance(clientName)) == 0);
 	}
 
 	private BigDecimal bDecimal(double value) {

@@ -12,35 +12,41 @@ import com.carbon.kata.bankaccount.display.DisplayableData;
 
 public class CarbonBank implements Bank {
 
-	private Map<String, LinkedList<AccountOperation>> clientAccounts = new HashMap<>();
+	private Map<String, LinkedList<Operation>> clientAccounts = new HashMap<>();
 	private final Clock clock;
-	
+
 	CarbonBank(Clock clock) {
 		this.clock = clock;
 	}
 
 	@Override
 	public Bank addClient(String clientName) {
-		LinkedList<AccountOperation> operations = new LinkedList<>();
-		operations.add(new AccountOperation(clock.millis(), BigDecimal.ZERO, BigDecimal.ZERO));
+		LinkedList<Operation> operations = new LinkedList<>();
+		operations.add(Operation.buildDepositOperation(clock.millis(), BigDecimal.ZERO, BigDecimal.ZERO));
 		clientAccounts.put(clientName, operations);
 		return this;
 	}
 
-	/*
-	 * return balance after applying operation.
-	 * 
-	 * return -1 if client does not exists.
-	 * 
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.carbon.kata.bankaccount.Bank#depositOrWithdrawalOnClientAccount(java.lang
-	 * .String, java.math.BigDecimal)
-	 */
 	@Override
-	public BigDecimal depositOrWithdrawalOnClientAccount(String clientName, BigDecimal amount) {
-		BigDecimal previousBalance = getClientAccountBalance(clientName);
+	public BigDecimal withdrawal(String clientName, BigDecimal amount) {
+		BigDecimal previousBalance = getBalance(clientName);
+
+		if (previousBalance.compareTo(BigDecimal.valueOf(-1)) == 0) {
+			return previousBalance;
+		}
+
+		BigDecimal newBalance = previousBalance.subtract(amount);
+
+		if (newBalance.compareTo(BigDecimal.ZERO) >= 0) {
+			clientAccounts.get(clientName).add(Operation.buildWithDrawalOperation(clock.millis(), amount, newBalance));
+		}
+
+		return newBalance;
+	}
+
+	@Override
+	public BigDecimal deposit(String clientName, BigDecimal amount) {
+		BigDecimal previousBalance = getBalance(clientName);
 
 		if (previousBalance.compareTo(BigDecimal.valueOf(-1)) == 0) {
 			return previousBalance;
@@ -48,15 +54,13 @@ public class CarbonBank implements Bank {
 
 		BigDecimal newBalance = previousBalance.add(amount);
 
-		if (newBalance.compareTo(BigDecimal.ZERO) >= 0) {
-			clientAccounts.get(clientName).add(new AccountOperation(clock.millis(), amount, newBalance));
-		}
+		clientAccounts.get(clientName).add(Operation.buildDepositOperation(clock.millis(), amount, newBalance));
 
 		return newBalance;
 	}
 
 	@Override
-	public BigDecimal getClientAccountBalance(String clientName) {
+	public BigDecimal getBalance(String clientName) {
 		if (!clientAccounts.containsKey(clientName)) {
 			return BigDecimal.valueOf(-1);
 		}
@@ -65,8 +69,8 @@ public class CarbonBank implements Bank {
 	}
 
 	@Override
-	public List<DisplayableData> getOperationsHistoricOnClientAccount(String clientName) {
-		LinkedList<AccountOperation> list = clientAccounts.get(clientName);
+	public List<DisplayableData> getOperations(String clientName) {
+		LinkedList<Operation> list = clientAccounts.get(clientName);
 		if (list == null) {
 			return Collections.emptyList();
 		}

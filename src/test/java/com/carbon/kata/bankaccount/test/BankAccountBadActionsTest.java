@@ -22,18 +22,16 @@ class BankAccountBadActionsTest {
 
 	@Test
 	void testToDepositOnNoExistingClientAccount() {
-		Assertions.assertEquals(BigDecimal.valueOf(-1),
-				bank.depositOrWithdrawalOnClientAccount(clientName, BigDecimal.valueOf(10)));
+		Assertions.assertEquals(BigDecimal.valueOf(-1), bank.deposit(clientName, BigDecimal.valueOf(10)));
 	}
 
 	@Test
 	void testToWithdrawalOnNoExistingClientAccount() {
-		Assertions.assertEquals(BigDecimal.valueOf(-1),
-				bank.depositOrWithdrawalOnClientAccount(clientName, BigDecimal.valueOf(-10)));
+		Assertions.assertEquals(BigDecimal.valueOf(-1), bank.withdrawal(clientName, BigDecimal.valueOf(10)));
 	}
 
 	@Test
 	void testToCreateExistingClientAccount() {
-		Assertions.assertEquals(Collections.emptyList(), bank.getOperationsHistoricOnClientAccount(clientName));
+		Assertions.assertEquals(Collections.emptyList(), bank.getOperations(clientName));
 	}
 }

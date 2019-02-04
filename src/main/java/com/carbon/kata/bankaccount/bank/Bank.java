@@ -8,9 +8,11 @@ import com.carbon.kata.bankaccount.display.DisplayableData;
 public interface Bank {
 	public Bank addClient(String clientName);
 
-	public BigDecimal depositOrWithdrawalOnClientAccount(String clientName, BigDecimal amountToDeposit);
+	public BigDecimal withdrawal(String clientName, BigDecimal amount);
+	
+	public BigDecimal deposit(String clientName, BigDecimal amount);
 
-	public BigDecimal getClientAccountBalance(String clientName);
+	public BigDecimal getBalance(String clientName);
 
-	public List<DisplayableData> getOperationsHistoricOnClientAccount(String clientName);
+	public List<DisplayableData> getOperations(String clientName);
 }

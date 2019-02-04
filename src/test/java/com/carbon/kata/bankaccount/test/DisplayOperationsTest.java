@@ -32,24 +32,17 @@ class DisplayOperationsTest {
 		bank.addClient(clientName);
 
 		StringBuilder builder = new StringBuilder();
-		String sp = ConsoleDisplay.SEPARATOR;
-		builder.append(
-				sp + "Operation " + sp + "Date            " + sp + "Amount" + sp + "Balance" + sp + System.lineSeparator());
-		builder.append(
-				sp + "Deposit   " + sp + "29-01-2019 00:29" + sp + "0     " + sp + "0      " + sp + System.lineSeparator());
-		builder.append(
-				sp + "Deposit   " + sp + "29-01-2019 00:29" + sp + "10    " + sp + "10     " + sp + System.lineSeparator());
-		builder.append(
-				sp + "Withdrawal" + sp + "29-01-2019 00:29" + sp + "-5    " + sp + "5      " + sp + System.lineSeparator());
-		builder.append(
-				sp + "Deposit   " + sp + "29-01-2019 00:29" + sp + "20    " + sp + "25     " + sp + System.lineSeparator());
-		builder.append(
-				sp + "Withdrawal" + sp + "29-01-2019 00:29" + sp + "-15   " + sp + "10     " + sp + System.lineSeparator());
+		builder.append(" | Operation  | Date             | Amount | Balance | " + System.lineSeparator());
+		builder.append(" | Deposit    | 29-01-2019 00:29 | 0      | 0       | " + System.lineSeparator());
+		builder.append(" | Deposit    | 29-01-2019 00:29 | 10     | 10      | " + System.lineSeparator());
+		builder.append(" | Withdrawal | 29-01-2019 00:29 | 5      | 5       | " + System.lineSeparator());
+		builder.append(" | Deposit    | 29-01-2019 00:29 | 20     | 25      | " + System.lineSeparator());
+		builder.append(" | Withdrawal | 29-01-2019 00:29 | 15     | 10      | " + System.lineSeparator());
 
-		bank.depositOrWithdrawalOnClientAccount(clientName, BigDecimal.valueOf(10));
-		bank.depositOrWithdrawalOnClientAccount(clientName, BigDecimal.valueOf(-5));
-		bank.depositOrWithdrawalOnClientAccount(clientName, BigDecimal.valueOf(20));
-		bank.depositOrWithdrawalOnClientAccount(clientName, BigDecimal.valueOf(-15));
+		bank.deposit(clientName, BigDecimal.valueOf(10));
+		bank.withdrawal(clientName, BigDecimal.valueOf(5));
+		bank.deposit(clientName, BigDecimal.valueOf(20));
+		bank.withdrawal(clientName, BigDecimal.valueOf(15));
 
 		bank.displayOperations(clientName);
 
@@ -69,7 +62,7 @@ class DisplayOperationsTest {
 		BigDecimal balance = BigDecimal.valueOf(10);
 
 		bank.addClient(clientName);
-		bank.depositOrWithdrawalOnClientAccount(clientName, balance);
+		bank.deposit(clientName, balance);
 
 		bank.displayAccountBalance(clientName);
 
