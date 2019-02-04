@@ -4,8 +4,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
-import com.carbon.kata.bankaccount.display.DisplayableData;
-
 public interface Bank {
 	public Bank addClient(String clientName);
 
@@ -15,5 +13,5 @@ public interface Bank {
 
 	public Optional<BigDecimal> getBalance(String clientName);
 
-	public List<DisplayableData> getOperations(String clientName);
+	public List<Operation> getOperations(String clientName);
 }

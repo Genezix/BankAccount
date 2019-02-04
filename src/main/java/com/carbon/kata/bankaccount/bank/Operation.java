@@ -5,65 +5,83 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
-import com.carbon.kata.bankaccount.display.DisplayableData;
-
-public class Operation implements DisplayableData {
+public class Operation {
 	private static final String DATE_FORMAT = "dd-MM-yyyy HH:mm";
-	
-	private static final List<String> headers;
-	static {
-		headers = new ArrayList<>();
-		headers.add("Operation ");
-		headers.add(String.format("%-" + DATE_FORMAT.length() + "s", "Date"));
-		headers.add("Amount");
-		headers.add("Balance");
-	}
+	public static final String SEPARATOR = " | ";
 
-	private List<String> datas;
+	public static final String HEADER = initHader();
+	private final String operationAsString;
 
 	private final long time;
 	private final OperationType type;
-	private final BigDecimal operationAmount;
+	private final BigDecimal amount;
 	private final BigDecimal balance;
+
+	private final static int columnOperationSize = 10;
+	private final static int columnAmountSize = 6;
+	private final static int columnBalanceSize = 7;
+
+	private static String initHader() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(SEPARATOR);
+		builder.append(formatString("Operation", columnOperationSize));
+		builder.append(SEPARATOR);
+		builder.append(formatString("Date", DATE_FORMAT.length()));
+		builder.append(SEPARATOR);
+		builder.append(formatString("Amount", columnAmountSize));
+		builder.append(SEPARATOR);
+		builder.append(formatString("Balance", columnBalanceSize));
+		builder.append(SEPARATOR);
+		return builder.toString();
+	}
 
 	public static Operation buildDepositOperation(long time, BigDecimal operationAmount, BigDecimal balance) {
 		return new Operation(time, operationAmount, balance, OperationType.DEPOSIT);
 	}
-	
+
 	public static Operation buildWithDrawalOperation(long time, BigDecimal operationAmount, BigDecimal balance) {
 		return new Operation(time, operationAmount, balance, OperationType.WISTHDRAWAL);
 	}
-	
-	private Operation(long time, BigDecimal operationAmount, BigDecimal balance, OperationType type) {
+
+	private Operation(long time, BigDecimal amount, BigDecimal balance, OperationType type) {
 		this.time = time;
-		this.operationAmount = operationAmount;
+		this.amount = amount;
 		this.balance = balance;
 		this.type = type;
+		this.operationAsString = initOperationAsString();
+	}
+
+	private String initOperationAsString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(SEPARATOR);
+		builder.append(formatString(this.type.getValue(), columnOperationSize));
+		builder.append(SEPARATOR);
+		LocalDateTime date = Instant.ofEpochMilli(this.time).atZone(ZoneId.systemDefault()).toLocalDateTime();
+		DateTimeFormatter ofPattern = DateTimeFormatter.ofPattern(DATE_FORMAT);
+		builder.append(formatString(date.format(ofPattern), DATE_FORMAT.length()));
+		builder.append(SEPARATOR);
+		builder.append(formatString(amount.toString(), columnAmountSize));
+		builder.append(SEPARATOR);
+		builder.append(formatString(balance.toString(), columnBalanceSize));
+		builder.append(SEPARATOR);
+		return builder.toString();
+	}
+
+	private static String formatString(String value, int size) {
+		return String.format("%-" + size + "s", value);
 	}
 
 	public BigDecimal getBalance() {
 		return balance;
 	}
 
-	@Override
-	public List<String> getHeaders() {
-		return headers;
+	public String getHeader() {
+		return HEADER;
 	}
 
-	@Override
-	public List<String> getOperationsAsString() {
-		if (datas == null) {
-			datas = new ArrayList<>();
-			datas.add(this.type.getValue());
-			LocalDateTime date = Instant.ofEpochMilli(this.time).atZone(ZoneId.systemDefault()).toLocalDateTime();
-			DateTimeFormatter ofPattern = DateTimeFormatter.ofPattern(DATE_FORMAT);
-			datas.add(date.format(ofPattern));
-			datas.add(operationAmount.toString());
-			datas.add(balance.toString());
-		}
-		return datas;
+	public String getOperationsAsString() {
+		return this.operationAsString;
+
 	}
 }

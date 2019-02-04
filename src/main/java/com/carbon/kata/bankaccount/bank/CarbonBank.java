@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.carbon.kata.bankaccount.display.DisplayableData;
-
 public class CarbonBank implements Bank {
 
 	private Map<String, LinkedList<Operation>> clientAccounts = new HashMap<>();
@@ -69,7 +67,7 @@ public class CarbonBank implements Bank {
 	}
 
 	@Override
-	public List<DisplayableData> getOperations(String clientName) {
+	public List<Operation> getOperations(String clientName) {
 		LinkedList<Operation> list = clientAccounts.get(clientName);
 		if (list == null) {
 			return Collections.emptyList();
