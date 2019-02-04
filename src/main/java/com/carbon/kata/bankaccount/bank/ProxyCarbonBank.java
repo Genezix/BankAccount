@@ -21,10 +21,10 @@ public class ProxyCarbonBank extends CarbonBank {
 	}
 
 	public void displayOperations(String clientName) {
-		operationDisplays.forEach(od -> od.displayOperations(getOperations(clientName)));
+		operationDisplays.forEach(od -> od.displayOperations(clientName, getOperations(clientName)));
 	}
 
 	public void displayAccountBalance(String clientName) {
-		operationDisplays.forEach(od -> od.displayAccountBalance(getBalance(clientName)));
+		operationDisplays.forEach(od -> od.displayAccountBalance(clientName, getBalance(clientName)));
 	}
 }

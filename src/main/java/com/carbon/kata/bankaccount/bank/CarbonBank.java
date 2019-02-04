@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.carbon.kata.bankaccount.display.DisplayableData;
 
@@ -28,44 +29,43 @@ public class CarbonBank implements Bank {
 	}
 
 	@Override
-	public BigDecimal withdrawal(String clientName, BigDecimal amount) {
-		BigDecimal previousBalance = getBalance(clientName);
+	public Optional<BigDecimal> withdrawal(String clientName, BigDecimal amount) {
+		Optional<BigDecimal> previousBalance = getBalance(clientName);
+		BigDecimal newBalance = null;
 
-		if (previousBalance.compareTo(BigDecimal.valueOf(-1)) == 0) {
-			return previousBalance;
+		if (previousBalance.isPresent()) {
+			newBalance = previousBalance.get().subtract(amount);
+
+			if (newBalance.compareTo(BigDecimal.ZERO) >= 0) {
+				clientAccounts.get(clientName).add(Operation.buildWithDrawalOperation(clock.millis(), amount, newBalance));
+			}
 		}
 
-		BigDecimal newBalance = previousBalance.subtract(amount);
-
-		if (newBalance.compareTo(BigDecimal.ZERO) >= 0) {
-			clientAccounts.get(clientName).add(Operation.buildWithDrawalOperation(clock.millis(), amount, newBalance));
-		}
-
-		return newBalance;
+		return Optional.ofNullable(newBalance);
 	}
 
 	@Override
-	public BigDecimal deposit(String clientName, BigDecimal amount) {
-		BigDecimal previousBalance = getBalance(clientName);
+	public Optional<BigDecimal> deposit(String clientName, BigDecimal amount) {
+		Optional<BigDecimal> previousBalance = getBalance(clientName);
 
-		if (previousBalance.compareTo(BigDecimal.valueOf(-1)) == 0) {
-			return previousBalance;
+		BigDecimal newBalance = null;
+
+		if (previousBalance.isPresent()) {
+			newBalance = previousBalance.get().add(amount);
+			clientAccounts.get(clientName).add(Operation.buildDepositOperation(clock.millis(), amount, newBalance));
 		}
 
-		BigDecimal newBalance = previousBalance.add(amount);
-
-		clientAccounts.get(clientName).add(Operation.buildDepositOperation(clock.millis(), amount, newBalance));
-
-		return newBalance;
+		return Optional.ofNullable(newBalance);
 	}
 
 	@Override
-	public BigDecimal getBalance(String clientName) {
-		if (!clientAccounts.containsKey(clientName)) {
-			return BigDecimal.valueOf(-1);
+	public Optional<BigDecimal> getBalance(String clientName) {
+		BigDecimal balance = null;
+		if (clientAccounts.containsKey(clientName)) {
+			balance = clientAccounts.get(clientName).getLast().getBalance();
 		}
 
-		return clientAccounts.get(clientName).getLast().getBalance();
+		return Optional.ofNullable(balance);
 	}
 
 	@Override

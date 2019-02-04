@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,9 @@ class BankAccountBasicActionsWithOneUserTest {
 	@Test
 	void testToCreateAClientWithEmptyAccount() {
 		final BigDecimal expectedAccountBalance = bDecimal(0);
-		assertTrue(expectedAccountBalance.compareTo(bank.getBalance(clientName)) == 0);
+		Optional<BigDecimal> balance = bank.getBalance(clientName);
+		assertTrue(balance.isPresent());
+		assertTrue(expectedAccountBalance.compareTo(balance.get()) == 0);
 	}
 
 	@Test
@@ -39,7 +42,9 @@ class BankAccountBasicActionsWithOneUserTest {
 
 		bank.deposit(clientName, amountToDeposit);
 
-		assertTrue(expectedAccountBalance.compareTo(bank.getBalance(clientName)) == 0);
+		Optional<BigDecimal> balance = bank.getBalance(clientName);
+		assertTrue(balance.isPresent());
+		assertTrue(expectedAccountBalance.compareTo(balance.get()) == 0);
 	}
 
 	@Test
@@ -51,7 +56,9 @@ class BankAccountBasicActionsWithOneUserTest {
 		bank.deposit(clientName, amountToDeposit);
 		bank.withdrawal(clientName, amountToWithdrawal);
 
-		assertTrue(expectedAccountBalance.compareTo(bank.getBalance(clientName)) == 0);
+		Optional<BigDecimal> balance = bank.getBalance(clientName);
+		assertTrue(balance.isPresent());
+		assertTrue(expectedAccountBalance.compareTo(balance.get()) == 0);
 	}
 
 	@Test
@@ -64,7 +71,9 @@ class BankAccountBasicActionsWithOneUserTest {
 		bank.deposit(clientName, amountToDeposit);
 		bank.withdrawal(clientName, amountToWithdrawal);
 
-		assertTrue(expectedAccountBalance.compareTo(bank.getBalance(clientName)) == 0);
+		Optional<BigDecimal> balance = bank.getBalance(clientName);
+		assertTrue(balance.isPresent());
+		assertTrue(expectedAccountBalance.compareTo(balance.get()) == 0);
 	}
 
 	private BigDecimal bDecimal(double value) {

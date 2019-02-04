@@ -69,6 +69,6 @@ class DisplayOperationsTest {
 		System.setOut(originalOut);
 		System.setErr(originalErr);
 
-		Assertions.assertEquals("balance = " + balance.toString() + System.lineSeparator(), outContent.toString());
+		Assertions.assertEquals(clientName + " account balance = " + balance.toString() + System.lineSeparator(), outContent.toString());
 	}
 }

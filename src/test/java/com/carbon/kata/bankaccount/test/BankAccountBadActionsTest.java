@@ -22,12 +22,12 @@ class BankAccountBadActionsTest {
 
 	@Test
 	void testToDepositOnNoExistingClientAccount() {
-		Assertions.assertEquals(BigDecimal.valueOf(-1), bank.deposit(clientName, BigDecimal.valueOf(10)));
+		Assertions.assertFalse(bank.deposit(clientName, BigDecimal.valueOf(10)).isPresent());
 	}
 
 	@Test
 	void testToWithdrawalOnNoExistingClientAccount() {
-		Assertions.assertEquals(BigDecimal.valueOf(-1), bank.withdrawal(clientName, BigDecimal.valueOf(10)));
+		Assertions.assertFalse(bank.withdrawal(clientName, BigDecimal.valueOf(10)).isPresent());
 	}
 
 	@Test

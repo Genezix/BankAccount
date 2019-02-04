@@ -5,5 +5,5 @@ import java.util.List;
 public interface DisplayableData {
 	public List<String> getHeaders();
 	
-	public List<String> getDatas();
+	public List<String> getOperationsAsString();
 }

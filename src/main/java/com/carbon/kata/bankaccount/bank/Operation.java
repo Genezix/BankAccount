@@ -54,7 +54,7 @@ public class Operation implements DisplayableData {
 	}
 
 	@Override
-	public List<String> getDatas() {
+	public List<String> getOperationsAsString() {
 		if (datas == null) {
 			datas = new ArrayList<>();
 			datas.add(this.type.getValue());
