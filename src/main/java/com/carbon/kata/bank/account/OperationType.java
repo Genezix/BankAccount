@@ -1,7 +1,7 @@
-package com.carbon.kata.bankaccount.bank;
+package com.carbon.kata.bank.account;
 
 public enum OperationType {
-	DEPOSIT("Deposit"), WISTHDRAWAL("Withdrawal");
+	DEPOSIT("Deposit"), WITHDRAWAL("Withdrawal");
 
 	private final String value;
 
