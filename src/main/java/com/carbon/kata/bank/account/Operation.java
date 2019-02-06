@@ -8,11 +8,11 @@ public class Operation {
 	private final BigDecimal amount;
 	private final BigDecimal balance;
 
-	public static Operation buildDepositOperation(long time, BigDecimal operationAmount, BigDecimal balance) {
+	public static Operation ofDeposit(long time, BigDecimal operationAmount, BigDecimal balance) {
 		return new Operation(time, operationAmount, balance, OperationType.DEPOSIT);
 	}
 
-	public static Operation buildWithdrawalOperation(long time, BigDecimal operationAmount, BigDecimal balance) {
+	public static Operation ofWithdrawal(long time, BigDecimal operationAmount, BigDecimal balance) {
 		return new Operation(time, operationAmount, balance, OperationType.WITHDRAWAL);
 	}
 

@@ -1,6 +1,6 @@
-package com.carbon.kata.bank.test;
+package com.carbon.kata.bank.bank.account;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.math.BigDecimal;
 import java.time.Clock;
@@ -37,44 +37,60 @@ class AccountShould {
 	@DisplayName("Account should accept to deposit a positive amount of money")
 	void acceptToDepositAPositiveAmountOfMoney() {
 		final var amountToDeposit = BigDecimal.valueOf(10);
-		final var expectedOperation = Operation.buildDepositOperation(clock.millis(), amountToDeposit, amountToDeposit);
+		final var expectedOperation = Operation.ofDeposit(clock.millis(), amountToDeposit, amountToDeposit);
+		
+		try {
+			account.depositMoney(amountToDeposit);
+		} catch (NegativeAmountException e) {
+			fail(e);
+		}
 
-		account.depositMoney(amountToDeposit);
+		Mockito.verify(operationRepository, VerificationModeFactory.times(1)).getLast();
 		Mockito.verify(operationRepository).add(expectedOperation);
+		Mockito.verifyNoMoreInteractions(operationRepository);
 	}
 
 	@Test
-	@DisplayName("Account should throw an exception when try to deposit a negative amount of money")
+	@DisplayName("Account should throw an exception trying to deposit a negative amount of money")
 	void throwAnExceptionWhenTryToDepositNegativeAmountOfMoney() {
 		final var amountToDeposit = BigDecimal.valueOf(-10);
 	    Assertions.assertThrows(NegativeAmountException.class, () -> {account.depositMoney(amountToDeposit);});
-	    Mockito.verify(operationRepository, VerificationModeFactory.times(0)).add(any());
+	    Mockito.verifyZeroInteractions(operationRepository);
 	}
 	
 	@Test
-	@DisplayName("Account should throw an exception when try to withdraw a negative amount of money")
+	@DisplayName("Account should throw an exception trying  to withdraw a negative amount of money")
 	void throwAnExceptionWhenTryToWithdrawNegativeAmountOfMoney() {
 		final var amountToWithdraw = BigDecimal.valueOf(-10);
 	    Assertions.assertThrows(NegativeAmountException.class, () -> {account.withdrawMoney(amountToWithdraw);});
-	    Mockito.verify(operationRepository, VerificationModeFactory.times(0)).add(any());
+		Mockito.verifyNoMoreInteractions(operationRepository);
 	}
 	
 	@Test
-	@DisplayName("Account should throw an exception when try to withdraw a negative amount of money")
+	@DisplayName("Account should throw an exception trying  to withdraw a negative amount of money")
 	void throwAnExceptionWhenTryToWithdrawMoreMoneyThanPossible() {
 		final var amountToWithdraw = BigDecimal.valueOf(10);
 	    Assertions.assertThrows(NotEnoughMoneyException.class, () -> {account.withdrawMoney(amountToWithdraw);});
-	    Mockito.verify(operationRepository, VerificationModeFactory.times(0)).add(any());
+	    // The getLast will be call in order to get the current balance
+	    Mockito.verify(operationRepository, VerificationModeFactory.times(1)).getLast();
+		Mockito.verifyNoMoreInteractions(operationRepository);
 	}
 	
 	@Test
 	@DisplayName("Account should accept to withdraw a positive amount of money when there is enough money")
 	void acceptToWithdrawAPositiveAmountOfMoneyWhenThereIsEnoughMoney() {
-		Mockito.when(operationRepository.getLast()).thenReturn(Optional.of(Operation.buildDepositOperation(clock.millis(), BigDecimal.valueOf(40), BigDecimal.valueOf(40))));
+		final var intialDepositOperation = Operation.ofDeposit(clock.millis(), BigDecimal.valueOf(40), BigDecimal.valueOf(40));
+		Mockito.when(operationRepository.getLast()).thenReturn(Optional.of(intialDepositOperation));
 		final var amountToWithdraw = BigDecimal.valueOf(10);
-		final var expectedOperation = Operation.buildWithdrawalOperation(clock.millis(), amountToWithdraw, BigDecimal.valueOf(30));
-
-		account.withdrawMoney(amountToWithdraw);
+		final var expectedOperation = Operation.ofWithdrawal(clock.millis(), amountToWithdraw, BigDecimal.valueOf(30));
+		try {
+			account.withdrawMoney(amountToWithdraw);
+		} catch (NegativeAmountException | NotEnoughMoneyException e) {
+			fail(e);
+		}
+		
+		Mockito.verify(operationRepository, VerificationModeFactory.times(1)).getLast();
 		Mockito.verify(operationRepository).add(expectedOperation);
+		Mockito.verifyNoMoreInteractions(operationRepository);
 	}
 }

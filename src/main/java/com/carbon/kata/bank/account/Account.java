@@ -20,7 +20,7 @@ public class Account {
 		this.clock = clock;
 	}
 
-	public BigDecimal withdrawMoney(BigDecimal amount) {
+	public BigDecimal withdrawMoney(BigDecimal amount) throws NegativeAmountException, NotEnoughMoneyException {
 		verifyAmount(amount);
 
 		final var currentBalance = getBalance();
@@ -30,20 +30,20 @@ public class Account {
 			throw new NotEnoughMoneyException(amount, currentBalance);
 		}
 
-		operationRepository.add(Operation.buildWithdrawalOperation(clock.millis(), amount, newBalance));
+		operationRepository.add(Operation.ofWithdrawal(clock.millis(), amount, newBalance));
 
 		return newBalance;
 	}
 
-	public BigDecimal depositMoney(BigDecimal amount) {
+	public BigDecimal depositMoney(BigDecimal amount) throws NegativeAmountException {
 		verifyAmount(amount);
 
 		final var newBalance = getBalance().add(amount);
-		operationRepository.add(Operation.buildDepositOperation(clock.millis(), amount, newBalance));
+		operationRepository.add(Operation.ofDeposit(clock.millis(), amount, newBalance));
 		return newBalance;
 	}
 
-	private void verifyAmount(BigDecimal amount) {
+	private void verifyAmount(BigDecimal amount) throws NegativeAmountException {
 		if (amount.compareTo(BigDecimal.ZERO) <= 0) {
 			throw new NegativeAmountException(amount);
 		}

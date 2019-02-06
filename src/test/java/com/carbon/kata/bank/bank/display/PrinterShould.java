@@ -1,4 +1,4 @@
-package com.carbon.kata.bank.test;
+package com.carbon.kata.bank.bank.display;
 
 import java.math.BigDecimal;
 import java.util.LinkedList;
@@ -18,10 +18,10 @@ class PrinterShould {
 		final var operationRepositoryMock = Mockito.mock(OperationRepository.class);
 
 		final List<Operation> expectedOperationList = new LinkedList<>();
-		expectedOperationList.add(Operation.buildDepositOperation(0l, BigDecimal.valueOf(10), BigDecimal.valueOf(10)));
-		expectedOperationList.add(Operation.buildDepositOperation(0l, BigDecimal.valueOf(20), BigDecimal.valueOf(30)));
+		expectedOperationList.add(Operation.ofDeposit(0l, BigDecimal.valueOf(10), BigDecimal.valueOf(10)));
+		expectedOperationList.add(Operation.ofDeposit(0l, BigDecimal.valueOf(20), BigDecimal.valueOf(30)));
 		expectedOperationList
-				.add(Operation.buildWithdrawalOperation(0l, BigDecimal.valueOf(5), BigDecimal.valueOf(25)));
+				.add(Operation.ofWithdrawal(0l, BigDecimal.valueOf(5), BigDecimal.valueOf(25)));
 		Mockito.when(operationRepositoryMock.find()).thenReturn(expectedOperationList);
 		Account account = new Account(operationRepositoryMock);
 

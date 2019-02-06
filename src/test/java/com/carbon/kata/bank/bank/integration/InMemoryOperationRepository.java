@@ -1,5 +1,6 @@
-package com.carbon.kata.bank.test.integration;
+package com.carbon.kata.bank.bank.integration;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -7,8 +8,8 @@ import java.util.Optional;
 import com.carbon.kata.bank.account.Operation;
 import com.carbon.kata.bank.account.OperationRepository;
 
-public class IntegrationTestOperationRepository implements OperationRepository {
-	private LinkedList<Operation> operationList = new LinkedList<>();
+public class InMemoryOperationRepository implements OperationRepository {
+	private final LinkedList<Operation> operationList = new LinkedList<>();
 
 	@Override
 	public void add(Operation operation) {
@@ -17,13 +18,13 @@ public class IntegrationTestOperationRepository implements OperationRepository {
 
 	@Override
 	public List<Operation> find() {
-		return operationList;
+		return Collections.unmodifiableList(operationList);
 	}
 
 	@Override
 	public Optional<Operation> getLast() {
 		if (operationList.isEmpty()) {
-			return Optional.ofNullable(null);
+			return Optional.empty();
 		}
 
 		return Optional.ofNullable(operationList.getLast());
