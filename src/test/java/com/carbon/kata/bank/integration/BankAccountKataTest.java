@@ -1,4 +1,4 @@
-package com.carbon.kata.bank.bank.integration;
+package com.carbon.kata.bank.integration;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -10,6 +10,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -25,12 +26,15 @@ class BankAccountKataTest {
 	private final PrintStream originalOut = System.out;
 	private final PrintStream originalErr = System.err;
 
+	@BeforeEach
+	void onSetUp() {
+		System.setOut(new PrintStream(outContent));
+		System.setErr(new PrintStream(errContent));
+	}
+	
 	@Test
 	@DisplayName("Integration test with console printer")
 	void receiveOperationListWhenAccountHaveToPrintStatement() {
-		System.setOut(new PrintStream(outContent));
-		System.setErr(new PrintStream(errContent));
-
 		// 1548718177581 = 29-01-2019 00:29
 		final var clock = Clock.fixed(Instant.ofEpochMilli(1548718177581l), ZoneId.systemDefault());
 

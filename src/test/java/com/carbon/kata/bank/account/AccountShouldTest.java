@@ -1,4 +1,4 @@
-package com.carbon.kata.bank.bank.account;
+package com.carbon.kata.bank.account;
 
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -21,7 +21,7 @@ import com.carbon.kata.bank.account.OperationRepository;
 import com.carbon.kata.bank.exceptions.NegativeAmountException;
 import com.carbon.kata.bank.exceptions.NotEnoughMoneyException;
 
-class AccountShould {
+class AccountShouldTest {
 	private Account account;
 	private Clock clock;
 	private OperationRepository operationRepository;

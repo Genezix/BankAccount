@@ -1,4 +1,4 @@
-package com.carbon.kata.bank.bank.integration;
+package com.carbon.kata.bank.integration;
 
 import java.util.Collections;
 import java.util.LinkedList;

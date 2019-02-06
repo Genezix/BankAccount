@@ -1,4 +1,4 @@
-package com.carbon.kata.bank.bank.display;
+package com.carbon.kata.bank.display;
 
 import java.math.BigDecimal;
 import java.util.LinkedList;
@@ -12,7 +12,7 @@ import com.carbon.kata.bank.account.Operation;
 import com.carbon.kata.bank.account.OperationRepository;
 import com.carbon.kata.bank.display.StatementPrinter;
 
-class PrinterShould {
+class PrinterShouldTest {
 	@Test
 	void receiveOperationListWhenAccountHaveToPrintStatement() {
 		final var operationRepositoryMock = Mockito.mock(OperationRepository.class);
