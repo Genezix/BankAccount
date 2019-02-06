@@ -6,7 +6,7 @@ import java.util.Optional;
 public interface OperationRepository {
 	void add(Operation operation);
 
-	List<Operation> find();
+	List<Operation> findAll();
 
 	Optional<Operation> getLast();
 }

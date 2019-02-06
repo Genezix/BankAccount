@@ -22,7 +22,7 @@ class StatementPrinterShouldTest {
 		expectedOperationList.add(Operation.ofDeposit(0l, BigDecimal.valueOf(10), BigDecimal.valueOf(10)));
 		expectedOperationList.add(Operation.ofDeposit(0l, BigDecimal.valueOf(20), BigDecimal.valueOf(30)));
 		expectedOperationList.add(Operation.ofWithdrawal(0l, BigDecimal.valueOf(5), BigDecimal.valueOf(25)));
-		Mockito.when(operationRepositoryMock.find()).thenReturn(expectedOperationList);
+		Mockito.when(operationRepositoryMock.findAll()).thenReturn(expectedOperationList);
 		Account account = new Account(operationRepositoryMock);
 
 		final var printerMock = Mockito.mock(StatementPrinter.class);

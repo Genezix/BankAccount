@@ -3,6 +3,7 @@ package com.carbon.kata.bank.display;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.StringJoiner;
 
 import com.carbon.kata.bank.account.Operation;
 
@@ -17,18 +18,14 @@ public class TabularOperationFormatter implements OperationFormatter {
 	private final static int columnBalanceSize = 7;
 
 	private static String initHeader() {
-		final var builder = new StringBuilder();
-		builder.append(SEPARATOR);
-		builder.append(formatString("Operation", columnOperationSize));
-		builder.append(SEPARATOR);
-		builder.append(formatString("Date", DATE_FORMAT.length()));
-		builder.append(SEPARATOR);
-		builder.append(formatString("Amount", columnAmountSize));
-		builder.append(SEPARATOR);
-		builder.append(formatString("Balance", columnBalanceSize));
-		builder.append(SEPARATOR);
-		return builder.toString();
+		return new StringJoiner(SEPARATOR, SEPARATOR, SEPARATOR)
+				.add(formatString("Operation", columnOperationSize))
+				.add(formatString("Date", DATE_FORMAT.length()))
+				.add(formatString("Amount", columnAmountSize))
+				.add(formatString("Balance", columnBalanceSize))
+				.toString();
 	}
+
 
 	@Override
 	public String getHeader() {
@@ -37,19 +34,15 @@ public class TabularOperationFormatter implements OperationFormatter {
 
 	@Override
 	public String formatOperation(Operation operation) {
-		final var builder = new StringBuilder();
-		builder.append(SEPARATOR);
-		builder.append(formatString(operation.getType().getValue(), columnOperationSize));
-		builder.append(SEPARATOR);
 		final var date = Instant.ofEpochMilli(operation.getTime()).atZone(ZoneId.systemDefault()).toLocalDateTime();
 		final var ofPattern = DateTimeFormatter.ofPattern(DATE_FORMAT);
-		builder.append(formatString(date.format(ofPattern), DATE_FORMAT.length()));
-		builder.append(SEPARATOR);
-		builder.append(formatString(operation.getAmount().toString(), columnAmountSize));
-		builder.append(SEPARATOR);
-		builder.append(formatString(operation.getBalance().toString(), columnBalanceSize));
-		builder.append(SEPARATOR);
-		return builder.toString();
+		
+		return new StringJoiner(SEPARATOR, SEPARATOR, SEPARATOR)
+				.add(formatString(operation.getType().getValue(), columnOperationSize))
+				.add(formatString(date.format(ofPattern), DATE_FORMAT.length()))
+				.add(formatString(operation.getAmount().toString(), columnAmountSize))
+				.add(formatString(operation.getBalance().toString(), columnBalanceSize))
+				.toString();
 	}
 
 	private static String formatString(String value, int size) {

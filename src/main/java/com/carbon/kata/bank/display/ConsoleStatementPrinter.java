@@ -14,11 +14,12 @@ public class ConsoleStatementPrinter implements StatementPrinter {
 
 	@Override
 	public void printStatement(List<Operation> operationList) {
+		System.out.println(operationFormatter.getHeader());
+
 		if (operationList == null || operationList.isEmpty()) {
 			return;
 		}
-
-		System.out.println(operationFormatter.getHeader());
+		
 		operationList.forEach(o -> System.out.println(operationFormatter.formatOperation(o)));
 	}
 }

@@ -1,6 +1,7 @@
 package com.carbon.kata.bank.account;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class Operation {
 	private final long time;
@@ -41,13 +42,7 @@ public class Operation {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((amount == null) ? 0 : amount.hashCode());
-		result = prime * result + ((balance == null) ? 0 : balance.hashCode());
-		result = prime * result + (int) (time ^ (time >>> 32));
-		result = prime * result + ((type == null) ? 0 : type.hashCode());
-		return result;
+		return Objects.hash(amount, balance, time, type);
 	}
 
 	@Override
@@ -59,20 +54,9 @@ public class Operation {
 		if (getClass() != obj.getClass())
 			return false;
 		Operation other = (Operation) obj;
-		if (amount == null) {
-			if (other.amount != null)
-				return false;
-		} else if (!amount.equals(other.amount))
-			return false;
-		if (balance == null) {
-			if (other.balance != null)
-				return false;
-		} else if (!balance.equals(other.balance))
-			return false;
-		if (time != other.time)
-			return false;
-		if (type != other.type)
-			return false;
-		return true;
+		return Objects.equals(amount, other.amount) && Objects.equals(balance, other.balance) && time == other.time
+				&& type == other.type;
 	}
+
+
 }

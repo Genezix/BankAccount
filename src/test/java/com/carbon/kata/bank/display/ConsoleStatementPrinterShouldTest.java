@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -50,6 +51,25 @@ class ConsoleStatementPrinterShouldTest {
 		// Assert
 		Mockito.verify(operationFormatter, VerificationModeFactory.times(1)).getHeader();
 		Mockito.verify(operationFormatter, VerificationModeFactory.times(1)).formatOperation(operation);
+		Mockito.verifyNoMoreInteractions(operationFormatter);
+		Assertions.assertEquals(expectedPrint, outContent.toString());
+	}
+	
+	@Test
+	@DisplayName("Console statement printer should display in console formatted operation list")
+	void printOnlyHeaderIfOperationListIsEmpty() {
+		final var expectedHeader = "OperationHeader";
+		final var expectedPrint = expectedHeader + System.lineSeparator();
+
+		final var operationFormatter = Mockito.mock(OperationFormatter.class);
+		Mockito.when(operationFormatter.getHeader()).thenReturn(expectedHeader);
+
+		// Act
+		final var printer = new ConsoleStatementPrinter(operationFormatter);
+		printer.printStatement(Collections.emptyList());
+
+		// Assert
+		Mockito.verify(operationFormatter, VerificationModeFactory.times(1)).getHeader();
 		Mockito.verifyNoMoreInteractions(operationFormatter);
 		Assertions.assertEquals(expectedPrint, outContent.toString());
 	}

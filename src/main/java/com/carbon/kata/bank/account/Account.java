@@ -58,6 +58,6 @@ public class Account {
 	}
 
 	public void printStatement(StatementPrinter printer) {
-		printer.printStatement(operationRepository.find());
+		printer.printStatement(operationRepository.findAll());
 	}
 }

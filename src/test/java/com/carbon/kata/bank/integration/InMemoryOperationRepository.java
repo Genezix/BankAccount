@@ -17,7 +17,7 @@ public class InMemoryOperationRepository implements OperationRepository {
 	}
 
 	@Override
-	public List<Operation> find() {
+	public List<Operation> findAll() {
 		return Collections.unmodifiableList(operationList);
 	}
 
