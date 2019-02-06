@@ -35,26 +35,27 @@ class ConsoleStatementPrinterShouldTest {
 	@DisplayName("Console statement printer should display in console formatted operation list")
 	void printOperationFormatedByAnOperationFormatter() {
 		final var expectedHeader = "OperationHeader";
-		final var expectedOperations = "OperationLine";
-		final var expectedPrint = expectedHeader + System.lineSeparator() + expectedOperations + System.lineSeparator();
+		final var expectedOperation = "OperationLine";
+		final var expectedPrint = expectedHeader + System.lineSeparator() + expectedOperation
+				+ System.lineSeparator() + expectedOperation + System.lineSeparator();
 
 		final var operationFormatter = Mockito.mock(OperationFormatter.class);
 		Mockito.when(operationFormatter.getHeader()).thenReturn(expectedHeader);
-		Mockito.when(operationFormatter.formatOperation(any())).thenReturn(expectedOperations);
+		Mockito.when(operationFormatter.formatOperation(any())).thenReturn(expectedOperation);
 
 		Operation operation = Mockito.mock(Operation.class);
 
 		// Act
 		final var printer = new ConsoleStatementPrinter(operationFormatter);
-		printer.printStatement(Arrays.asList(operation));
+		printer.printStatement(Arrays.asList(operation, operation));
 
 		// Assert
 		Mockito.verify(operationFormatter, VerificationModeFactory.times(1)).getHeader();
-		Mockito.verify(operationFormatter, VerificationModeFactory.times(1)).formatOperation(operation);
+		Mockito.verify(operationFormatter, VerificationModeFactory.times(2)).formatOperation(operation);
 		Mockito.verifyNoMoreInteractions(operationFormatter);
 		Assertions.assertEquals(expectedPrint, outContent.toString());
 	}
-	
+
 	@Test
 	@DisplayName("Console statement printer should display in console formatted operation list")
 	void printOnlyHeaderIfOperationListIsEmpty() {

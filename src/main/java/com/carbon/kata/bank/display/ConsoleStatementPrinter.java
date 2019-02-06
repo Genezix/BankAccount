@@ -1,6 +1,7 @@
 package com.carbon.kata.bank.display;
 
 import java.util.List;
+import java.util.ListIterator;
 
 import com.carbon.kata.bank.account.Operation;
 
@@ -19,7 +20,11 @@ public class ConsoleStatementPrinter implements StatementPrinter {
 		if (operationList == null || operationList.isEmpty()) {
 			return;
 		}
-		
-		operationList.forEach(o -> System.out.println(operationFormatter.formatOperation(o)));
+
+		// Print operations starting by the last operation
+		ListIterator<Operation> listIterator = operationList.listIterator(operationList.size());
+		while (listIterator.hasPrevious()) {
+			System.out.println(operationFormatter.formatOperation(listIterator.previous()));
+		}
 	}
 }

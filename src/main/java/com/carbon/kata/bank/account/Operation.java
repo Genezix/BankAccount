@@ -9,12 +9,12 @@ public class Operation {
 	private final BigDecimal amount;
 	private final BigDecimal balance;
 
-	public static Operation ofDeposit(long time, BigDecimal operationAmount, BigDecimal balance) {
-		return new Operation(time, operationAmount, balance, OperationType.DEPOSIT);
+	public static Operation ofDeposit(long time, BigDecimal amount, BigDecimal balance) {
+		return new Operation(time, amount, balance, OperationType.DEPOSIT);
 	}
 
-	public static Operation ofWithdrawal(long time, BigDecimal operationAmount, BigDecimal balance) {
-		return new Operation(time, operationAmount, balance, OperationType.WITHDRAWAL);
+	public static Operation ofWithdrawal(long time, BigDecimal amount, BigDecimal balance) {
+		return new Operation(time, amount, balance, OperationType.WITHDRAWAL);
 	}
 
 	private Operation(long time, BigDecimal amount, BigDecimal balance, OperationType type) {

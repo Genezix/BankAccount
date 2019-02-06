@@ -39,21 +39,21 @@ class BankAccountKataTest {
 		final var clock = Clock.fixed(Instant.ofEpochMilli(1548718177581l), ZoneId.systemDefault());
 
 		final var builder = new StringBuilder();
-		builder.append(" | Operation  | Date             | Amount | Balance | " + System.lineSeparator());
-		builder.append(" | Deposit    | 29-01-2019 00:29 | 10     | 10      | " + System.lineSeparator());
-		builder.append(" | Withdrawal | 29-01-2019 00:29 | 5      | 5       | " + System.lineSeparator());
-		builder.append(" | Deposit    | 29-01-2019 00:29 | 20     | 25      | " + System.lineSeparator());
-		builder.append(" | Withdrawal | 29-01-2019 00:29 | 1.4    | 23.6    | " + System.lineSeparator());
+		builder.append("Operation  | Date             | Amount | Balance" + System.lineSeparator());
+		builder.append("Withdrawal | 29-01-2019 00:29 | 1.4    | 23.6   " + System.lineSeparator());
+		builder.append("Deposit    | 29-01-2019 00:29 | 20     | 25     " + System.lineSeparator());
+		builder.append("Withdrawal | 29-01-2019 00:29 | 5      | 5      " + System.lineSeparator());
+		builder.append("Deposit    | 29-01-2019 00:29 | 10     | 10     " + System.lineSeparator());
 
 		final var expectedStatement = builder.toString();
 
 		// Act
 		final var account = new Account(new InMemoryOperationRepository(), clock);
 
-		account.depositMoney(new BigDecimal("10"));
-		account.withdrawMoney(new BigDecimal("5"));
-		account.depositMoney(new BigDecimal("20"));
-		account.withdrawMoney(new BigDecimal("1.4"));
+		account.deposit(new BigDecimal("10"));
+		account.withdraw(new BigDecimal("5"));
+		account.deposit(new BigDecimal("20"));
+		account.withdraw(new BigDecimal("1.4"));
 
 		account.printStatement(new ConsoleStatementPrinter(new TabularOperationFormatter()));
 
