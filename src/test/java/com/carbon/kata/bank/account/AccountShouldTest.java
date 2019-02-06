@@ -15,9 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.mockito.internal.verification.VerificationModeFactory;
 
-import com.carbon.kata.bank.account.Account;
-import com.carbon.kata.bank.account.Operation;
-import com.carbon.kata.bank.account.OperationRepository;
 import com.carbon.kata.bank.exceptions.NegativeAmountException;
 import com.carbon.kata.bank.exceptions.NotEnoughMoneyException;
 
@@ -38,7 +35,7 @@ class AccountShouldTest {
 	void acceptToDepositAPositiveAmountOfMoney() {
 		final var amountToDeposit = BigDecimal.valueOf(10);
 		final var expectedOperation = Operation.ofDeposit(clock.millis(), amountToDeposit, amountToDeposit);
-		
+
 		try {
 			account.depositMoney(amountToDeposit);
 		} catch (NegativeAmountException e) {
@@ -54,32 +51,39 @@ class AccountShouldTest {
 	@DisplayName("Account should throw an exception trying to deposit a negative amount of money")
 	void throwAnExceptionWhenTryToDepositNegativeAmountOfMoney() {
 		final var amountToDeposit = BigDecimal.valueOf(-10);
-	    Assertions.assertThrows(NegativeAmountException.class, () -> {account.depositMoney(amountToDeposit);});
-	    Mockito.verifyZeroInteractions(operationRepository);
+		Assertions.assertThrows(NegativeAmountException.class, () -> {
+			account.depositMoney(amountToDeposit);
+		});
+		Mockito.verifyZeroInteractions(operationRepository);
 	}
-	
+
 	@Test
 	@DisplayName("Account should throw an exception trying  to withdraw a negative amount of money")
 	void throwAnExceptionWhenTryToWithdrawNegativeAmountOfMoney() {
 		final var amountToWithdraw = BigDecimal.valueOf(-10);
-	    Assertions.assertThrows(NegativeAmountException.class, () -> {account.withdrawMoney(amountToWithdraw);});
+		Assertions.assertThrows(NegativeAmountException.class, () -> {
+			account.withdrawMoney(amountToWithdraw);
+		});
 		Mockito.verifyNoMoreInteractions(operationRepository);
 	}
-	
+
 	@Test
 	@DisplayName("Account should throw an exception trying  to withdraw a negative amount of money")
 	void throwAnExceptionWhenTryToWithdrawMoreMoneyThanPossible() {
 		final var amountToWithdraw = BigDecimal.valueOf(10);
-	    Assertions.assertThrows(NotEnoughMoneyException.class, () -> {account.withdrawMoney(amountToWithdraw);});
-	    // The getLast will be call in order to get the current balance
-	    Mockito.verify(operationRepository, VerificationModeFactory.times(1)).getLast();
+		Assertions.assertThrows(NotEnoughMoneyException.class, () -> {
+			account.withdrawMoney(amountToWithdraw);
+		});
+		// The getLast will be call in order to get the current balance
+		Mockito.verify(operationRepository, VerificationModeFactory.times(1)).getLast();
 		Mockito.verifyNoMoreInteractions(operationRepository);
 	}
-	
+
 	@Test
 	@DisplayName("Account should accept to withdraw a positive amount of money when there is enough money")
 	void acceptToWithdrawAPositiveAmountOfMoneyWhenThereIsEnoughMoney() {
-		final var intialDepositOperation = Operation.ofDeposit(clock.millis(), BigDecimal.valueOf(40), BigDecimal.valueOf(40));
+		final var intialDepositOperation = Operation.ofDeposit(clock.millis(), BigDecimal.valueOf(40),
+				BigDecimal.valueOf(40));
 		Mockito.when(operationRepository.getLast()).thenReturn(Optional.of(intialDepositOperation));
 		final var amountToWithdraw = BigDecimal.valueOf(10);
 		final var expectedOperation = Operation.ofWithdrawal(clock.millis(), amountToWithdraw, BigDecimal.valueOf(30));
@@ -88,7 +92,7 @@ class AccountShouldTest {
 		} catch (NegativeAmountException | NotEnoughMoneyException e) {
 			fail(e);
 		}
-		
+
 		Mockito.verify(operationRepository, VerificationModeFactory.times(1)).getLast();
 		Mockito.verify(operationRepository).add(expectedOperation);
 		Mockito.verifyNoMoreInteractions(operationRepository);

@@ -9,10 +9,12 @@ import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneId;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
 
 import com.carbon.kata.bank.account.Account;
 import com.carbon.kata.bank.display.ConsoleStatementPrinter;
@@ -27,11 +29,11 @@ class BankAccountKataTest {
 	private final PrintStream originalErr = System.err;
 
 	@BeforeEach
-	void onSetUp() {
+	void init() {
 		System.setOut(new PrintStream(outContent));
 		System.setErr(new PrintStream(errContent));
 	}
-	
+
 	@Test
 	@DisplayName("Integration test with console printer")
 	void receiveOperationListWhenAccountHaveToPrintStatement() {
@@ -63,8 +65,11 @@ class BankAccountKataTest {
 
 		// Assert
 		Assertions.assertEquals(expectedStatement, outContent.toString());
-
+	}
+	
+	@AfterEach
+    void tearDown(TestInfo testInfo) {
 		System.setOut(originalOut);
 		System.setErr(originalErr);
-	}
+    }
 }

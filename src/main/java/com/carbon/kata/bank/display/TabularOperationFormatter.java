@@ -35,13 +35,6 @@ public class TabularOperationFormatter implements OperationFormatter {
 		return header;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.carbon.kata.bank.display.OperationFormatter#formatOperation(com.carbon.
-	 * kata.bank.account.Operation)
-	 */
 	@Override
 	public String formatOperation(Operation operation) {
 		final var builder = new StringBuilder();
@@ -58,6 +51,7 @@ public class TabularOperationFormatter implements OperationFormatter {
 		builder.append(SEPARATOR);
 		return builder.toString();
 	}
+
 	private static String formatString(String value, int size) {
 		return String.format("%-" + size + "s", value);
 	}
