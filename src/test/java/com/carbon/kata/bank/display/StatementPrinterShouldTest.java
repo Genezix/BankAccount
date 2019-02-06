@@ -13,15 +13,19 @@ import com.carbon.kata.bank.account.Operation;
 import com.carbon.kata.bank.account.OperationRepository;
 
 class StatementPrinterShouldTest {
+
+	private final BigDecimal bigDecimal10 = new BigDecimal("10");
+	private final BigDecimal bigDecimal20 = new BigDecimal("20");
+
 	@Test
 	@DisplayName("Verify that printer receive the good operation list to print")
 	void receiveOperationListWhenAccountHaveToPrintStatement() {
 		final var operationRepositoryMock = Mockito.mock(OperationRepository.class);
 
 		final List<Operation> expectedOperationList = new LinkedList<>();
-		expectedOperationList.add(Operation.ofDeposit(0l, BigDecimal.valueOf(10), BigDecimal.valueOf(10)));
-		expectedOperationList.add(Operation.ofDeposit(0l, BigDecimal.valueOf(20), BigDecimal.valueOf(30)));
-		expectedOperationList.add(Operation.ofWithdrawal(0l, BigDecimal.valueOf(5), BigDecimal.valueOf(25)));
+		expectedOperationList.add(Operation.ofDeposit(0l, bigDecimal10, bigDecimal10));
+		expectedOperationList.add(Operation.ofDeposit(0l, bigDecimal20, bigDecimal10.add(bigDecimal20)));
+		expectedOperationList.add(Operation.ofWithdrawal(0l, bigDecimal10, bigDecimal20));
 		Mockito.when(operationRepositoryMock.findAll()).thenReturn(expectedOperationList);
 		Account account = new Account(operationRepositoryMock);
 

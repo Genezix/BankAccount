@@ -1,7 +1,5 @@
 package com.carbon.kata.bank.integration;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.math.BigDecimal;
@@ -36,7 +34,7 @@ class BankAccountKataTest {
 
 	@Test
 	@DisplayName("Integration test with console printer")
-	void receiveOperationListWhenAccountHaveToPrintStatement() {
+	void receiveOperationListWhenAccountHaveToPrintStatement() throws NegativeAmountException, NotEnoughMoneyException {
 		// 1548718177581 = 29-01-2019 00:29
 		final var clock = Clock.fixed(Instant.ofEpochMilli(1548718177581l), ZoneId.systemDefault());
 
@@ -45,21 +43,17 @@ class BankAccountKataTest {
 		builder.append(" | Deposit    | 29-01-2019 00:29 | 10     | 10      | " + System.lineSeparator());
 		builder.append(" | Withdrawal | 29-01-2019 00:29 | 5      | 5       | " + System.lineSeparator());
 		builder.append(" | Deposit    | 29-01-2019 00:29 | 20     | 25      | " + System.lineSeparator());
-		builder.append(" | Withdrawal | 29-01-2019 00:29 | 15     | 10      | " + System.lineSeparator());
+		builder.append(" | Withdrawal | 29-01-2019 00:29 | 1.4    | 23.6    | " + System.lineSeparator());
 
 		final var expectedStatement = builder.toString();
 
 		// Act
 		final var account = new Account(new InMemoryOperationRepository(), clock);
 
-		try {
-			account.depositMoney(BigDecimal.valueOf(10));
-			account.withdrawMoney(BigDecimal.valueOf(5));
-			account.depositMoney(BigDecimal.valueOf(20));
-			account.withdrawMoney(BigDecimal.valueOf(15));
-		} catch (NegativeAmountException | NotEnoughMoneyException e) {
-			fail(e);
-		}
+		account.depositMoney(new BigDecimal("10"));
+		account.withdrawMoney(new BigDecimal("5"));
+		account.depositMoney(new BigDecimal("20"));
+		account.withdrawMoney(new BigDecimal("1.4"));
 
 		account.printStatement(new ConsoleStatementPrinter(new TabularOperationFormatter()));
 
